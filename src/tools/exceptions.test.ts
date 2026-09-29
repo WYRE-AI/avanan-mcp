@@ -89,7 +89,7 @@ describe("hec_delete_exception", () => {
       excType: "blacklist",
       excId: "x1",
     });
-    expect(mockedApiRequest).toHaveBeenCalledWith("/v1.0/exceptions/blacklist/delete/x1", {
+    expect(mockedApiRequest).toHaveBeenCalledExactlyOnceWith("/v1.0/exceptions/blacklist/delete/x1", {
       method: "POST",
     });
     expect(result.content[0].text).toBe("Exception x1 deleted from blacklist.");
