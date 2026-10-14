@@ -1,18 +1,24 @@
 services:
+  # Gateway mode. Client id and secret arrive per request on
+  # X-Checkpoint-Client-Id and X-Checkpoint-Client-Secret.
+  # Do not set CHECKPOINT_CLIENT_ID, CHECKPOINT_CLIENT_SECRET, or env_file
+  # here — that would put static vendor credentials in the container.
+  # The project .env is used only for Compose interpolation of
+  # CONDUIT_S2S_SECRET and CHECKPOINT_REGION. For AUTH_MODE=env, pass
+  # CHECKPOINT_CLIENT_ID and CHECKPOINT_CLIENT_SECRET on that process
+  # instead (see the README).
   mcp:
     build:
       context: .
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
       - MCP_TRANSPORT=http
       - MCP_HTTP_PORT=8080
       - MCP_HTTP_HOST=0.0.0.0
-      - AUTH_MODE=${AUTH_MODE:-env}
+      - AUTH_MODE=gateway
       - LOG_LEVEL=${LOG_LEVEL:-info}
-      # Required when AUTH_MODE=env
-      - CHECKPOINT_CLIENT_ID=${CHECKPOINT_CLIENT_ID}
-      - CHECKPOINT_CLIENT_SECRET=${CHECKPOINT_CLIENT_SECRET}
+      - CONDUIT_S2S_SECRET=${CONDUIT_S2S_SECRET:?set CONDUIT_S2S_SECRET}
       # Optional: force region (us | eu | au | in). Auto-detected when omitted.
       - CHECKPOINT_REGION=${CHECKPOINT_REGION:-}
     healthcheck:

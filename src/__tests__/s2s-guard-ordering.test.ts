@@ -134,7 +134,8 @@ beforeAll(async () => {
   process.env.MCP_HTTP_PORT = String(TEST_PORT);
   process.env.MCP_HTTP_HOST = TEST_HOST;
   process.env.CONDUIT_S2S_SECRET = TEST_S2S_SECRET;
-  await import("../index.js");
+  const { startHttpTransport } = await import("../index.js");
+  await startHttpTransport();
   await waitForServerReady();
 });
 
