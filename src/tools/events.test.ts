@@ -9,7 +9,7 @@
  * caller actually provided should be forwarded).
  */
 import { describe, it, expect, vi } from "vitest";
-import { handleEventTool } from "./events.js";
+import { handleEventTool, eventTools } from "./events.js";
 import { apiRequest } from "../utils/client.js";
 import type { ApiResponse, HecEvent } from "../utils/types.js";
 
@@ -86,5 +86,18 @@ describe("unknown event tool", () => {
     await expect(handleEventTool("hec_not_a_real_tool", {})).rejects.toThrow(
       "Unknown event tool: hec_not_a_real_tool"
     );
+  });
+});
+
+describe("hec_query_events schema", () => {
+  it("only advertises eventTypes values the HEC API accepts (no spaces)", () => {
+    const tool = eventTools.find((t) => t.name === "hec_query_events")!;
+    const props = tool.inputSchema.properties as Record<string, { items?: { enum?: string[] } }>;
+    const values = props.eventTypes.items!.enum!;
+    // The API rejects "suspicious malware" (with a space) with HTTP 422;
+    // the accepted identifiers are suspicious_malware / suspicious_phishing.
+    for (const v of values) expect(v).not.toMatch(/\s/);
+    expect(values).toContain("suspicious_malware");
+    expect(values).toContain("suspicious_phishing");
   });
 });

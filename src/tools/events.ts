@@ -27,7 +27,8 @@ export const eventTools: Tool[] = [
             enum: [
               "phishing",
               "malware",
-              "suspicious malware",
+              "suspicious_malware",
+              "suspicious_phishing",
               "dlp",
               "anomaly",
               "shadow_it",

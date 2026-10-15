@@ -95,7 +95,8 @@ const CARD_ACTION_LIMIT = 6;
 const TYPE_LABELS: Record<string, string> = {
   phishing: "Phishing",
   malware: "Malware",
-  "suspicious malware": "Suspicious Malware",
+  suspicious_malware: "Suspicious Malware",
+  suspicious_phishing: "Suspicious Phishing",
   dlp: "DLP",
   anomaly: "Anomaly",
   shadow_it: "Shadow IT",
