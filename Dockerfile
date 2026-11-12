@@ -17,6 +17,7 @@ RUN npm run build
 
 # Production stage
 FROM node:26-alpine AS production
+RUN apk -U upgrade --no-cache
 
 RUN addgroup -g 1001 -S avanan && \
     adduser -S avanan -u 1001 -G avanan
@@ -31,6 +32,8 @@ RUN npm prune --omit=dev && npm cache clean --force
 
 RUN mkdir -p /app/logs && chown -R avanan:avanan /app
 
+# npm is not needed at runtime; removing it clears Trivy CVEs in its bundled deps
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 USER avanan
 
 EXPOSE 8080
